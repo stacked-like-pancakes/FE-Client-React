@@ -14,33 +14,19 @@ const Map = () => {
 
   console.log(res);
 
-  const lineRaw = [{ x: 1, y: 1 }];
+  const lineRaw = [
+    { x: 1, y: 2 },
+    { x: 2, y: 1 }
+  ];
 
   const random = () => Math.floor(Math.random() * 10);
 
   const scatterRaw = [
-    { x: random(), y: random() },
-    { x: random(), y: random() },
-    { x: random(), y: random() },
-    { x: random(), y: random() },
-    { x: random(), y: random() },
-    { x: random(), y: random() },
-    { x: random(), y: random() },
-    { x: random(), y: random() },
-    { x: random(), y: random() },
-    { x: random(), y: random() },
-    { x: random(), y: random() },
-    { x: random(), y: random() },
-    { x: random(), y: random() },
-    { x: random(), y: random() },
-    { x: random(), y: random() },
-    { x: random(), y: random() },
-    { x: random(), y: random() },
-    { x: random(), y: random() },
-    { x: random(), y: random() }
+    { x: 1, y: 2 },
+    { x: 2, y: 1 }
   ];
 
-  const player = { x: 2, y: 2 };
+  const player = { x: 2, y: 1 };
 
   const scatterData = scatterRaw.map(point => {
     if (point.x === player.x && point.y === player.y) {
@@ -57,7 +43,7 @@ const Map = () => {
   });
 
   return (
-    <div style={{ width: '200px', height: '200px' }}>
+    <div style={{ width: '500px', height: '500px' }}>
       <VictoryGroup>
         <VictoryLine data={lineRaw} />
         <VictoryScatter

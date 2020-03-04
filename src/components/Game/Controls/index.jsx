@@ -15,8 +15,38 @@ const Controls = () => {
     return data;
   };
 
+  const handleKey = async e => {
+    switch (e.keyCode) {
+      case 87: {
+        const send = { direction: 'n' };
+        const { data } = await axiosWithAuth().post('api/adv/move/', send);
+        console.log(data);
+
+        return data;
+      }
+      case 83: {
+        const send = { direction: 's' };
+        const { data } = await axiosWithAuth().post('api/adv/move/', send);
+        console.log(data);
+
+        return data;
+      }
+      default:
+        break;
+    }
+  };
+
+  React.useEffect(() => {
+    document.addEventListener('keyup', handleKey);
+  });
+
   return (
-    <>
+    <div
+      role="button"
+      tabIndex={0}
+      style={{ background: 'red' }}
+      onKeyUp={handleKey}
+    >
       <button onClick={e => handleClick(e, 'n')} type="button">
         North
       </button>
@@ -29,7 +59,7 @@ const Controls = () => {
       <button onClick={e => handleClick(e, 'w')} type="button">
         West
       </button>
-    </>
+    </div>
   );
 };
 
