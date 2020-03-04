@@ -2,11 +2,14 @@ import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { submitLogin, submitRegister } from '../../services/authServices';
 
+import Form from './Form';
+
 const Login = () => {
   const initialState = { username: '', password: '', confirm: '' };
 
   const [isNewUser, setIsNewUser] = React.useState(false);
   const [form, setForm] = React.useState(initialState);
+  const [error, setError] = React.useState('');
 
   const history = useHistory();
 
@@ -17,80 +20,49 @@ const Login = () => {
 
   const handleSubmit = async (e, state) => {
     e.preventDefault();
-    if (state) {
+    if (state === true) {
       const { password, confirm } = form;
       if (confirm === password) {
-        const result = await submitRegister(form);
-        console.log(result);
+        const ok = password.match(/^(?=.*\d).{8,15}$/);
+
+        if (!ok) {
+          setError('Your password is not strong enough.');
+        }
+
+        if (ok && ok[0] === password) {
+          try {
+            const result = await submitRegister(form);
+            localStorage.setItem('token', result.data.key);
+            history.push('/game');
+          } catch (why) {
+            setError(why.response.data.password1[0]);
+          }
+        }
+      }
+
+      if (confirm !== password) {
+        setError('Passwords do not match.');
       }
     } else {
-      const result = await submitLogin(form);
-      localStorage.setItem('token', result.key);
-      history.push('/game');
+      try {
+        const result = await submitLogin(form);
+        localStorage.setItem('token', result.key);
+        history.push('/game');
+      } catch (why) {
+        setError(why.response.data.non_field_errors[0]);
+      }
     }
   };
 
   return (
-    <>
-      <form onSubmit={e => handleSubmit(e, isNewUser)}>
-        <label htmlFor="username">
-          Username
-          <input
-            type="text"
-            onChange={handleChange}
-            name="username"
-            value={form.username}
-          />
-        </label>
-        <label htmlFor="password">
-          Password
-          <input
-            type="password"
-            onChange={handleChange}
-            name="password"
-            value={form.password}
-          />
-        </label>
-
-        {isNewUser ? (
-          <label htmlFor="confirm">
-            Password
-            <input
-              type="password"
-              onChange={handleChange}
-              name="confirm"
-              value={form.confirm}
-            />
-          </label>
-        ) : null}
-        <button type="submit">{isNewUser ? 'Register' : 'Login'}</button>
-      </form>
-      {isNewUser ? (
-        <p>
-          Already have an account?{' '}
-          <span
-            onKeyPress={() => setIsNewUser(false)}
-            tabIndex={0}
-            role="button"
-            onClick={() => setIsNewUser(false)}
-          >
-            Click Here
-          </span>
-        </p>
-      ) : (
-        <p>
-          New user? Sign up{' '}
-          <span
-            onKeyPress={() => setIsNewUser(true)}
-            tabIndex={0}
-            role="button"
-            onClick={() => setIsNewUser(true)}
-          >
-            Here
-          </span>
-        </p>
-      )}
-    </>
+    <Form
+      isNewUser={isNewUser}
+      setIsNewUser={setIsNewUser}
+      form={form}
+      handleChange={handleChange}
+      handleSubmit={handleSubmit}
+      error={error}
+    />
   );
 };
 

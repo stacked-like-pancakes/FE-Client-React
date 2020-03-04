@@ -3,42 +3,31 @@ import axios from 'axios';
 const baseURL = `http://localhost:8000`;
 
 export const submitLogin = async body => {
-  try {
-    const { username, password } = body;
-    const send = {
-      username,
-      password
-    };
+  const { username, password } = body;
+  const send = {
+    username,
+    password
+  };
 
-    const { data } = await axios.post(`http://localhost:8000/api/login/`, send);
+  const { data } = await axios.post(`http://localhost:8000/api/login/`, send);
 
-    return data;
-  } catch (why) {
-    console.error(why);
-
-    return why;
-  }
+  return data;
 };
 
 export const submitRegister = async body => {
-  try {
-    const send = {
-      username: body.username,
-      password1: body.password,
-      password2: body.confirm
-    };
+  const send = {
+    username: body.username,
+    password1: body.password,
+    password2: body.confirm
+  };
+  console.log(send);
 
-    const { data } = await axios.post(
-      `http://localhost:8000/api/registration/`,
-      send
-    );
+  const result = await axios.post(
+    `http://localhost:8000/api/registration/`,
+    send
+  );
 
-    return data;
-  } catch (why) {
-    console.error(why);
-
-    return why;
-  }
+  return result;
 };
 
 export const axiosWithAuth = (url = baseURL) => {
