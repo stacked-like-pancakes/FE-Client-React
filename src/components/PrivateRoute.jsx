@@ -9,6 +9,7 @@ export default ({ component: Component, ...rest }) => {
         if (localStorage.getItem('token')) {
           return <Component />;
         }
+        console.log('what the fuck');
         return <Redirect to="/login" />;
       }}
     />
