@@ -2,12 +2,15 @@ import React from 'react';
 import { Route } from 'react-router-dom';
 
 import PrivateRoute from './PrivateRoute';
-import Login from './Login';
+import Auth from './Auth';
 import Game from './Game';
+
+import 'normalize.css';
+import './App.css';
 
 const App = () => (
   <>
-    <Route path="/login" component={Login} />
+    <Route path="/auth" component={Auth} />
     <PrivateRoute path="/game" component={Game} />
   </>
 );
