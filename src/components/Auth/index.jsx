@@ -4,7 +4,7 @@ import { submitLogin, submitRegister } from '../../services/authServices';
 
 import Form from './Form';
 
-const Login = () => {
+const Auth = () => {
   const initialState = { username: '', password: '', confirm: '' };
   const history = useHistory();
 
@@ -69,4 +69,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Auth;
