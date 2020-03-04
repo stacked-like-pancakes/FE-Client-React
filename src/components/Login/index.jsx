@@ -9,7 +9,7 @@ const Login = () => {
 
   const [isNewUser, setIsNewUser] = React.useState(false);
   const [form, setForm] = React.useState(initialState);
-  const [error, setError] = React.useState('');
+  const [error, setError] = React.useState([]);
 
   const history = useHistory();
 
@@ -26,7 +26,11 @@ const Login = () => {
         const ok = password.match(/^(?=.*\d).{8,15}$/);
 
         if (!ok) {
-          setError('Your password is not strong enough.');
+          const newError = "Your password isn't strong enough.";
+          // eslint-disable-next-line no-unused-expressions
+          error.indexOf(newError) === -1
+            ? setError([...error, newError])
+            : null;
         }
 
         if (ok && ok[0] === password) {
@@ -35,13 +39,19 @@ const Login = () => {
             localStorage.setItem('token', result.data.key);
             history.push('/game');
           } catch (why) {
-            setError(why.response.data.password1[0]);
+            const newError = why.response.data.password1[0];
+            // eslint-disable-next-line no-unused-expressions
+            error.indexOf(newError) === -1
+              ? setError([...error, newError])
+              : null;
           }
         }
       }
 
       if (confirm !== password) {
-        setError('Passwords do not match.');
+        const newError = 'Passwords do not match';
+        // eslint-disable-next-line no-unused-expressions
+        error.indexOf(newError) === -1 ? setError([...error, newError]) : null;
       }
     } else {
       try {
@@ -49,7 +59,9 @@ const Login = () => {
         localStorage.setItem('token', result.key);
         history.push('/game');
       } catch (why) {
-        setError(why.response.data.non_field_errors[0]);
+        const newError = why.response.data.non_field_errors[0];
+        // eslint-disable-next-line no-unused-expressions
+        error.indexOf(newError) === -1 ? setError([...error, newError]) : null;
       }
     }
   };

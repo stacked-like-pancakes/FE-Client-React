@@ -48,7 +48,7 @@ const Form = props => {
           </label>
         ) : null}
         <button type="submit">{isNewUser ? 'Register' : 'Login'}</button>
-        <p>{error}</p>
+        {error.length ? error.map(err => <p>{err}</p>) : null}
       </form>
       {isNewUser ? (
         <p>
