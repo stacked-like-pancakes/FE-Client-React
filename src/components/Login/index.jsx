@@ -6,16 +6,19 @@ import Form from './Form';
 
 const Login = () => {
   const initialState = { username: '', password: '', confirm: '' };
+  const history = useHistory();
 
   const [isNewUser, setIsNewUser] = React.useState(false);
   const [form, setForm] = React.useState(initialState);
   const [error, setError] = React.useState([]);
 
-  const history = useHistory();
-
   const handleChange = e => {
     const { name, value } = e.target;
     setForm({ ...form, [name]: value });
+  };
+
+  const handleError = err => {
+    return error.indexOf(err) === -1 ? setError([...error, err]) : null;
   };
 
   const handleSubmit = async (e, state) => {
@@ -26,11 +29,7 @@ const Login = () => {
         const ok = password.match(/^(?=.*\d).{8,15}$/);
 
         if (!ok) {
-          const newError = "Your password isn't strong enough.";
-          // eslint-disable-next-line no-unused-expressions
-          error.indexOf(newError) === -1
-            ? setError([...error, newError])
-            : null;
+          handleError("Your password isn't strong enough");
         }
 
         if (ok && ok[0] === password) {
@@ -38,30 +37,22 @@ const Login = () => {
             const result = await submitRegister(form);
             localStorage.setItem('token', result.data.key);
             history.push('/game');
-          } catch (why) {
-            const newError = why.response.data.password1[0];
-            // eslint-disable-next-line no-unused-expressions
-            error.indexOf(newError) === -1
-              ? setError([...error, newError])
-              : null;
+          } catch ({ response: { data } }) {
+            handleError(data.password1[0]);
           }
         }
       }
 
       if (confirm !== password) {
-        const newError = 'Passwords do not match';
-        // eslint-disable-next-line no-unused-expressions
-        error.indexOf(newError) === -1 ? setError([...error, newError]) : null;
+        handleError('Passwords do not match');
       }
     } else {
       try {
         const result = await submitLogin(form);
         localStorage.setItem('token', result.key);
         history.push('/game');
-      } catch (why) {
-        const newError = why.response.data.non_field_errors[0];
-        // eslint-disable-next-line no-unused-expressions
-        error.indexOf(newError) === -1 ? setError([...error, newError]) : null;
+      } catch ({ response: { data } }) {
+        handleError(data.non_field_errors[0]);
       }
     }
   };

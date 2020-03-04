@@ -20,7 +20,6 @@ export const submitRegister = async body => {
     password1: body.password,
     password2: body.confirm
   };
-  console.log(send);
 
   const result = await axios.post(
     `http://localhost:8000/api/registration/`,
