@@ -4,7 +4,10 @@ import styled from 'styled-components';
 import { axiosWithAuth } from '../../services/authServices';
 
 import Map from './Map';
+import Chat from './Chat';
 import Controls from './Controls';
+
+import { ControllerDispatchContext as Dispatch } from '../../contexts';
 
 const Container = styled.div`
   margin: 10vh auto 0;
@@ -13,36 +16,36 @@ const Container = styled.div`
 `;
 
 const Game = () => {
-  const [mapState, setMapState] = React.useState([]);
+  const dispatch = React.useContext(Dispatch);
   const [playerState, setPlayerState] = React.useState({ x: null, y: null });
+  const [chatState, setChatState] = React.useState([]);
 
   React.useEffect(() => {
     (async () => {
-      const result = await axiosWithAuth().get('api/adv/rooms/');
-      setMapState(result.data.dungeon);
-    })();
-  }, []);
+      const rooms = axiosWithAuth().get('api/adv/rooms/');
+      const initialize = axiosWithAuth().get('api/adv/init/');
+      const [roomState, initializeState] = await axios.all([rooms, initialize]);
 
-  React.useEffect(() => {
-    (async () => {
-      // const { data } = await axiosWithAuth().get(`api/adv/rooms`);
+      const { x_cor: x, y_cor: y } = initializeState.data;
+      dispatch({ type: 'LOAD_PLAYER', payload: { x, y } });
 
-      const result = await axiosWithAuth().get('api/adv/init/');
-      const { x_cor, y_cor } = result.data;
-      console.log('here', { x_cor, y_cor });
-      setPlayerState({ x: x_cor, y: y_cor });
+      // setPlayerState({ x, y });
+
+      const { dungeon } = roomState.data;
+      dispatch({ type: 'FETCH_MAP_DATA', payload: dungeon });
     })();
-  }, []);
+  }, [dispatch]);
 
   return (
     <Container>
-      <Map
+      <Chat chatState={chatState} setChatState={setChatState} />
+      <Map playerState={playerState} setPlayerState={setPlayerState} />
+      <Controls
         playerState={playerState}
         setPlayerState={setPlayerState}
-        mapState={mapState}
-        setMapState={setMapState}
+        setChatState={setChatState}
+        chatState={chatState}
       />
-      <Controls playerState={playerState} setPlayerState={setPlayerState} />
     </Container>
   );
 };

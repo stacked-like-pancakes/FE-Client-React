@@ -1,61 +1,33 @@
 import React from 'react';
 import { VictoryGroup, VictoryLine, VictoryScatter } from 'victory';
+import { ControllerStateContext as State } from '../../../contexts';
 
-const Map = ({ mapState, playerState }) => {
-  const northLines = d => {
-    if (d.north_id) {
-      return [
-        { x: d.x_cor, y: d.y_cor },
-        { x: d.x_cor, y: d.y_cor + 1 }
-      ];
-    }
-  };
+import { northLines, southLines, westLines, eastLines } from './utils';
 
-  const westLines = d => {
-    if (d.west_id) {
-      return [
-        { x: d.x_cor, y: d.y_cor },
-        { x: d.x_cor - 1, y: d.y_cor }
-      ];
-    }
-  };
-
-  const eastLines = d => {
-    if (d.east_id) {
-      return [
-        { x: d.x_cor, y: d.y_cor },
-        { x: d.x_cor + 1, y: d.y_cor }
-      ];
-    }
-  };
-
-  const southLines = d => {
-    if (d.south_id) {
-      return [
-        { x: d.x_cor, y: d.y_cor },
-        { x: d.x_cor, y: d.y_cor - 1 }
-      ];
-    }
-  };
+const Map = () => {
+  const { map: mapState, player: playerState } = React.useContext(State);
 
   const north = mapState.map(dungeon => northLines(dungeon)).filter(x => x);
   const south = mapState.map(dungeon => southLines(dungeon)).filter(x => x);
   const west = mapState.map(dungeon => westLines(dungeon)).filter(x => x);
   const east = mapState.map(dungeon => eastLines(dungeon)).filter(x => x);
 
-  const scatterData = mapState.map(point => {
-    if (point.x_cor === playerState.x && point.y_cor === playerState.y) {
+  const playerConfig = {
+    symbol: 'star',
+    opacity: 1,
+    fill: 'red',
+    size: 4
+  };
+
+  const scatterData = mapState.map(({ x_cor: x, y_cor: y }) => {
+    if (x === playerState.x && y === playerState.y) {
       return {
-        x: point.x_cor,
-        y: point.y_cor,
-        symbol: 'star',
-        opacity: 1,
-        // label: `Playa`,
-        fill: 'red',
-        size: 4
+        x,
+        y,
+        ...playerConfig
       };
     }
-    return { x: point.x_cor, y: point.y_cor, symbol: 'circle' };
+    return { x, y, symbol: 'circle' };
   });
 
   return (
@@ -67,18 +39,17 @@ const Map = ({ mapState, playerState }) => {
     >
       <VictoryGroup color="#888888">
         {north.map(pair => {
-          return <VictoryLine data={pair} />;
+          return <VictoryLine key={String(pair[1])} data={pair} />;
         })}
         {south.map(pair => {
-          return <VictoryLine data={pair} />;
+          return <VictoryLine key={String(pair[1])} data={pair} />;
         })}
         {west.map(pair => {
-          return <VictoryLine data={pair} />;
+          return <VictoryLine key={String(pair[1])} data={pair} />;
         })}
         {east.map(pair => {
-          return <VictoryLine data={pair} />;
+          return <VictoryLine key={String(pair[1])} data={pair} />;
         })}
-        {/* <VictoryLine data={lineRaw} /> */}
         <VictoryScatter
           data={scatterData}
           style={{ data: { fill: ({ datum }) => datum.fill } }}

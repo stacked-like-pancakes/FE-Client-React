@@ -1,13 +1,49 @@
 import React from 'react';
 import { axiosWithAuth } from '../../../services/authServices';
+import { ControllerDispatchContext as Dispatch } from '../../../contexts';
 
-const Controls = ({ setPlayerState, playerState }) => {
+const Controls = ({ chatState, setChatState }) => {
+  const dispatch = React.useContext(Dispatch);
+
+  const handleChat = msg => {
+    return chatState.indexOf(msg) === -1
+      ? setChatState([...chatState, msg])
+      : null;
+  };
+
+  const handlePlayer = React.useCallback(
+    (d, err) => {
+      if (!err) {
+        switch (d.direction) {
+          case 'n': {
+            dispatch({ type: 'PLAYER_MOVE_NORTH' });
+            break;
+          }
+          case 's': {
+            dispatch({ type: 'PLAYER_MOVE_SOUTH' });
+            break;
+          }
+          case 'e': {
+            dispatch({ type: 'PLAYER_MOVE_EAST' });
+            break;
+          }
+          case 'w': {
+            dispatch({ type: 'PLAYER_MOVE_WEST' });
+            break;
+          }
+          default:
+            break;
+        }
+      }
+    },
+    [dispatch]
+  );
+
   const handleClick = async (e, body) => {
     e.preventDefault();
     const send = { direction: body };
     const { data } = await axiosWithAuth().post('api/adv/move/', send);
-
-    setPlayerState(data);
+    handlePlayer(send, data.err_msg);
 
     return data;
   };
@@ -20,36 +56,34 @@ const Controls = ({ setPlayerState, playerState }) => {
           const send = { direction: 'n' };
 
           const { data } = await axiosWithAuth().post('api/adv/move/', send);
-          const { x_cor, y_cor } = data;
-          console.log({ x_cor, y_cor });
-
-          setPlayerState({ x: x_cor, y: y_cor });
+          handlePlayer(send, data.error_msg);
+          handleChat(data.description);
           return data;
         }
         // S to go South
         case 83: {
           const send = { direction: 's' };
           const { data } = await axiosWithAuth().post('api/adv/move/', send);
-          const { x_cor, y_cor } = data;
-
-          setPlayerState({ x: x_cor, y: y_cor });
-          console.log(playerState);
+          handlePlayer(send, data.error_msg);
+          handleChat(data.description);
           return data;
         }
         // A to go West
         case 65: {
           const send = { direction: 'w' };
           const { data } = await axiosWithAuth().post('api/adv/move/', send);
+          handlePlayer(send, data.error_msg);
+          handleChat(data.description);
 
-          setPlayerState(data);
           return data;
         }
         // D to go East
         case 68: {
           const send = { direction: 'e' };
           const { data } = await axiosWithAuth().post('api/adv/move/', send);
+          handlePlayer(send, data.error_msg);
+          handleChat(data.description);
 
-          setPlayerState(data);
           return data;
         }
         default:
@@ -57,7 +91,7 @@ const Controls = ({ setPlayerState, playerState }) => {
       }
       return null;
     },
-    [setPlayerState, playerState]
+    [handlePlayer]
   );
 
   React.useEffect(() => {
