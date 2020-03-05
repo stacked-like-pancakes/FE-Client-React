@@ -19,7 +19,7 @@ const Game = () => {
   React.useEffect(() => {
     (async () => {
       const result = await axiosWithAuth().get('api/adv/rooms/');
-      setMapState(result.data.Dungeon);
+      setMapState(result.data.dungeon);
     })();
   }, []);
 
