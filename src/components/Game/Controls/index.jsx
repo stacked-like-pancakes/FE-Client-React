@@ -86,6 +86,12 @@ const Controls = ({ chatState, setChatState }) => {
 
           return data;
         }
+        case 73: {
+          const send = { command: 'i' };
+          const { data } = await axiosWithAuth().post('api/adv/interact', send);
+          console.log('inspect data', data);
+          return data;
+        }
         default:
           break;
       }
