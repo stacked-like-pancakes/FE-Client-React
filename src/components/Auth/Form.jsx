@@ -44,6 +44,7 @@ const TrickSpan = styled.span`
 const Error = styled.p`
   color: #ed4337;
   font-size: 0.8rem;
+  text-align: center;
 `;
 
 const Button = styled.button`
