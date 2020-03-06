@@ -22,7 +22,7 @@ const Controls = () => {
 
   const handlePlayer = React.useCallback(
     (d, res) => {
-      const { title, description, contents, inventory } = res;
+      const { title, description } = res;
       if (!res.error_msg) {
         switch (d.direction) {
           case 'n': {
@@ -139,10 +139,7 @@ const Controls = () => {
         case 73: {
           const send = { command: 'i' };
           const { data } = await axiosWithAuth().post('api/adv/interact', send);
-          console.log('inspect AWA // data', data);
           handleInteraction(send, data);
-          // handleInspect(data);
-          // console.log('inspect data', data);
           return data;
         }
         default:
