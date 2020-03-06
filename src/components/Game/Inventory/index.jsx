@@ -1,10 +1,13 @@
 import React from 'react';
 import { axiosWithAuth } from '../../../services/authServices';
 
+import { ControllerStateContext as State } from '../../../contexts';
+import { ControllerDispatchContext as Dispatch } from '../../../contexts';
 import InventoryItem from './InventoryItem';
 
-const Inventory = ({ inventory, setInventoryState, setContentsState }) => {
-  // console.log('Inventory // inventory', inventory);
+const Inventory = () => {
+  const dispatch = React.useContext(Dispatch);
+  const { inventory } = React.useContext(State);
 
   const handleDrop = item => {
     const send = {
@@ -14,10 +17,12 @@ const Inventory = ({ inventory, setInventoryState, setContentsState }) => {
     axiosWithAuth()
       .post('/api/adv/interact', send)
       .then(res => {
-        const newInventory = res.data.inventory;
         const newContents = res.data.contents;
-        setInventoryState(newInventory);
-        setContentsState(newContents);
+        const newInventory = res.data.inventory;
+        dispatch({
+          type: 'PLAYER_DROP_ITEM',
+          payload: { newContents, newInventory }
+        });
       });
   };
 

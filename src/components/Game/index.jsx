@@ -52,6 +52,8 @@ const Game = () => {
         }}
       >
         <Map />
+        <Contents />
+        <Inventory />
       </div>
     </Container>
   );

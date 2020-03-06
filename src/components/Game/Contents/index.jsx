@@ -1,22 +1,28 @@
 import React from 'react';
 import { axiosWithAuth } from '../../../services/authServices';
 
+import { ControllerStateContext as State } from '../../../contexts';
+import { ControllerDispatchContext as Dispatch } from '../../../contexts';
 import ItemEntry from './ItemEntry';
 
-const Contents = ({ contents, setContentsState, setInventoryState }) => {
+const Contents = () => {
+  const dispatch = React.useContext(Dispatch);
+  const { contents } = React.useContext(State);
+
   const handleGrab = item => {
     const send = {
       command: 'g',
       item_id: item.uuid
     };
-    // const { newContents, newInventory } =
     axiosWithAuth()
       .post('/api/adv/interact', send)
       .then(res => {
-        const newInventory = res.data.inventory;
         const newContents = res.data.contents;
-        setInventoryState(newInventory);
-        setContentsState(newContents);
+        const newInventory = res.data.inventory;
+        dispatch({
+          type: 'PLAYER_GRAB_ITEM',
+          payload: { newContents, newInventory }
+        });
       });
   };
 

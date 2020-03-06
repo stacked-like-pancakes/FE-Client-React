@@ -22,7 +22,7 @@ const Controls = () => {
 
   const handlePlayer = React.useCallback(
     (d, res) => {
-      const { title, description } = res;
+      const { title, description, contents, inventory } = res;
       if (!res.error_msg) {
         switch (d.direction) {
           case 'n': {
@@ -61,10 +61,36 @@ const Controls = () => {
     [dispatch]
   );
 
-  // const handleInspect = ({ inventory, contents }) => {
-  //   setInventoryState(inventory);
-  //   setContentsState(contents);
-  // };
+  const handleInteraction = React.useCallback((i, res) => {
+    const { inventory, contents } = res;
+    if (!res.error_msg) {
+      switch (i.command) {
+        case 'i': {
+          dispatch({
+            type: 'PLAYER_INSPECT_ROOM',
+            payload: { contents, inventory }
+          });
+          break;
+        }
+        case 'g': {
+          dispatch({
+            type: 'PLAYER_GRAB_ITEM',
+            payload: { contents, inventory }
+          });
+          break;
+        }
+        case 'd': {
+          dispatch({
+            type: 'PLAYER_DROP_ITEM',
+            payload: { contents, inventory }
+          });
+          break;
+        }
+        default:
+          break;
+      }
+    }
+  });
 
   const handleClick = async (e, body) => {
     e.preventDefault();
@@ -75,12 +101,12 @@ const Controls = () => {
     return data;
   };
 
-  // const handleInspectClick = async (e, body) => {
-  //   e.preventDefault();
-  //   const send = { command: body };
-  //   const { data } = await axiosWithAuth().post('api/adv/interact', send);
-  //   handleInspect(data);
-  // };
+  const handleInspectClick = async (e, body) => {
+    e.preventDefault();
+    const send = { command: body };
+    const { data } = await axiosWithAuth().post('api/adv/interact', send);
+    handleInteraction(send, data);
+  };
 
   const handleKey = React.useCallback(
     async e => {
@@ -110,13 +136,15 @@ const Controls = () => {
           break;
         }
         // I to inspect
-        // case 73: {
-        //   const send = { command: 'i' };
-        //   const { data } = await axiosWithAuth().post('api/adv/interact', send);
-        //   handleInspect(data);
-        //   // console.log('inspect data', data);
-        //   return data;
-        // }
+        case 73: {
+          const send = { command: 'i' };
+          const { data } = await axiosWithAuth().post('api/adv/interact', send);
+          console.log('inspect AWA // data', data);
+          handleInteraction(send, data);
+          // handleInspect(data);
+          // console.log('inspect data', data);
+          return data;
+        }
         default:
           break;
       }
@@ -146,9 +174,9 @@ const Controls = () => {
       <Button onClick={e => handleClick(e, 'w')} type="Button">
         West
       </Button>
-      {/* <Button onClick={e => handleInspectClick(e, 'i')} type="Button">
+      <Button onClick={e => handleInspectClick(e, 'i')} type="Button">
         Inspect Room
-      </Button> */}
+      </Button>
     </>
   );
 };

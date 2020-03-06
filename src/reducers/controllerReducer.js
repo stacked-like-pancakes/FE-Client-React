@@ -12,6 +12,8 @@ export const controllerState = {
   map: [],
   player: { x: null, y: null },
   room: '',
+  contents: [],
+  inventory: [],
   chat,
   lines: {
     north: [],
@@ -20,6 +22,8 @@ export const controllerState = {
     west: []
   }
 };
+
+
 
 export const controllerReducer = (state = controllerState, action) => {
   switch (action.type) {
@@ -118,6 +122,24 @@ export const controllerReducer = (state = controllerState, action) => {
           east: makeLines(action.payload, eastLines),
           west: makeLines(action.payload, westLines)
         }
+      };
+    case 'PLAYER_INSPECT_ROOM':
+      return {
+        ...state,
+        contents: [...action.payload.contents],
+        inventory: [...action.payload.inventory]
+      };
+    case 'PLAYER_GRAB_ITEM':
+      return {
+        ...state,
+        contents: [...action.payload.newContents],
+        inventory: [...action.payload.newInventory]
+      };
+    case 'PLAYER_DROP_ITEM':
+      return {
+        ...state,
+        contents: [...action.payload.newContents],
+        inventory: [...action.payload.newInventory]
       };
     default:
       return state;
