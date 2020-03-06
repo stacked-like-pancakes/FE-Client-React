@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const baseURL = `http://localhost:8000`;
+const baseURL = `https://dudescape.herokuapp.com`;
 
 export const submitLogin = async body => {
   const { username, password } = body;
@@ -9,7 +9,10 @@ export const submitLogin = async body => {
     password
   };
 
-  const { data } = await axios.post(`http://localhost:8000/api/login/`, send);
+  const { data } = await axios.post(
+    `https://dudescape.herokuapp.com/api/login/`,
+    send
+  );
 
   return data;
 };
@@ -22,7 +25,7 @@ export const submitRegister = async body => {
   };
 
   const result = await axios.post(
-    `http://localhost:8000/api/registration/`,
+    `https://dudescape.herokuapp.com/api/registration/`,
     send
   );
 
