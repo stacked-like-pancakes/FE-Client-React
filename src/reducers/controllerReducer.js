@@ -1,7 +1,9 @@
 export const controllerState = {
   state: 'Hello World',
   map: [],
-  player: { x: null, y: null }
+  player: { x: null, y: null },
+  // contents: [],
+  // inventory: []
 };
 
 export const controllerReducer = (state = controllerState, action) => {

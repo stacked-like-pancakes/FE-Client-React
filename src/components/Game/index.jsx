@@ -6,6 +6,8 @@ import { axiosWithAuth } from '../../services/authServices';
 import Map from './Map';
 import Chat from './Chat';
 import Controls from './Controls';
+import Contents from './Contents';
+import Inventory from './Inventory';
 
 import { ControllerDispatchContext as Dispatch } from '../../contexts';
 
@@ -19,6 +21,8 @@ const Game = () => {
   const dispatch = React.useContext(Dispatch);
   const [playerState, setPlayerState] = React.useState({ x: null, y: null });
   const [chatState, setChatState] = React.useState([]);
+  const [contentsState, setContentsState] = React.useState([]);
+  const [inventoryState, setInventoryState] = React.useState([]);
 
   React.useEffect(() => {
     (async () => {
@@ -40,11 +44,25 @@ const Game = () => {
     <Container>
       <Chat chatState={chatState} setChatState={setChatState} />
       <Map playerState={playerState} setPlayerState={setPlayerState} />
+      <Contents
+        contents={contentsState}
+        setContentsState={setContentsState}
+        setInventoryState={setInventoryState}
+      />
+      <Inventory
+        inventory={inventoryState}
+        setContentsState={setContentsState}
+        setInventoryState={setInventoryState}
+      />
       <Controls
         playerState={playerState}
         setPlayerState={setPlayerState}
         setChatState={setChatState}
         chatState={chatState}
+        contentsState={contentsState}
+        setContentsState={setContentsState}
+        inventoryState={inventoryState}
+        setInventoryState={setInventoryState}
       />
     </Container>
   );

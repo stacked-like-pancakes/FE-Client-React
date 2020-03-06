@@ -2,7 +2,12 @@ import React from 'react';
 import { axiosWithAuth } from '../../../services/authServices';
 import { ControllerDispatchContext as Dispatch } from '../../../contexts';
 
-const Controls = ({ chatState, setChatState }) => {
+const Controls = ({
+  chatState,
+  setChatState,
+  setInventoryState,
+  setContentsState
+}) => {
   const dispatch = React.useContext(Dispatch);
 
   const handleChat = msg => {
@@ -39,13 +44,24 @@ const Controls = ({ chatState, setChatState }) => {
     [dispatch]
   );
 
+  const handleInspect = ({ inventory, contents }) => {
+    setInventoryState(inventory);
+    setContentsState(contents);
+  };
+
   const handleClick = async (e, body) => {
     e.preventDefault();
     const send = { direction: body };
     const { data } = await axiosWithAuth().post('api/adv/move/', send);
     handlePlayer(send, data.err_msg);
-
     return data;
+  };
+
+  const handleInspectClick = async (e, body) => {
+    e.preventDefault();
+    const send = { command: body };
+    const { data } = await axiosWithAuth().post('api/adv/interact', send);
+    handleInspect(data);
   };
 
   const handleKey = React.useCallback(
@@ -86,10 +102,12 @@ const Controls = ({ chatState, setChatState }) => {
 
           return data;
         }
+        // I to inspect
         case 73: {
           const send = { command: 'i' };
           const { data } = await axiosWithAuth().post('api/adv/interact', send);
-          console.log('inspect data', data);
+          handleInspect(data);
+          // console.log('inspect data', data);
           return data;
         }
         default:
@@ -117,6 +135,9 @@ const Controls = ({ chatState, setChatState }) => {
       </button>
       <button onClick={e => handleClick(e, 'w')} type="button">
         West
+      </button>
+      <button onClick={e => handleInspectClick(e, 'i')} type="button">
+        Inspect Room
       </button>
     </>
   );
