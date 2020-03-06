@@ -6,6 +6,8 @@ import { ControllerDispatchContext as Dispatch } from '../../contexts';
 import Map from './Map';
 import Chat from './Chat';
 import Controls from './Controls';
+import Contents from './Contents';
+import Inventory from './Inventory';
 
 const Game = () => {
   const dispatch = React.useContext(Dispatch);
@@ -50,6 +52,8 @@ const Game = () => {
         }}
       >
         <Map />
+        <Contents />
+        <Inventory />
       </div>
     </Container>
   );
