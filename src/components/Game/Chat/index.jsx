@@ -1,9 +1,21 @@
 import React from 'react';
+import { ControllerStateContext as State } from '../../../contexts';
 
-const Chat = ({ chatState, setChatState }) => {
+import Line from './Line';
+import ChatBox from './ChatBox';
+
+const Chat = () => {
+  const { chat } = React.useContext(State);
   return (
     <>
-      <pre>{JSON.stringify(chatState, null, 4)}</pre>
+      {chat.map((line, i) => {
+        return (
+          <Line line={line} key={line + String(i)}>
+            {line}
+          </Line>
+        );
+      })}
+      <ChatBox />
     </>
   );
 };
