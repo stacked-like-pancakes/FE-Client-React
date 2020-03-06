@@ -1,16 +1,20 @@
 import React from 'react';
+import styled from 'styled-components';
 import { VictoryGroup, VictoryLine, VictoryScatter } from 'victory';
 import { ControllerStateContext as State } from '../../../contexts';
 
-import { northLines, southLines, westLines, eastLines } from './utils';
+const Container = styled.div`
+  width: 960px;
+  height: 960px;
+  margin: 0 auto;
+`;
 
 const Map = () => {
-  const { map: mapState, player: playerState } = React.useContext(State);
-
-  const north = mapState.map(dungeon => northLines(dungeon)).filter(x => x);
-  const south = mapState.map(dungeon => southLines(dungeon)).filter(x => x);
-  const west = mapState.map(dungeon => westLines(dungeon)).filter(x => x);
-  const east = mapState.map(dungeon => eastLines(dungeon)).filter(x => x);
+  const {
+    map: mapState,
+    player: playerState,
+    lines: { north, south, east, west }
+  } = React.useContext(State);
 
   const playerConfig = {
     symbol: 'star',
@@ -27,24 +31,19 @@ const Map = () => {
         ...playerConfig
       };
     }
-    return { x, y, symbol: 'circle' };
+    return { x, y, symbol: 'circle', fill: 'white' };
   });
 
+  // {north.map(pair => {
+  // 	return <VictoryLine key={String(pair[1])} data={pair} />;
+  // })}
+  // {west.map(pair => {
+  // 	return <VictoryLine key={String(pair[1])} data={pair} />;
+  // })}
   return (
-    <div
-      style={{
-        width: '960px',
-        height: '960px'
-      }}
-    >
-      <VictoryGroup color="#888888">
-        {north.map(pair => {
-          return <VictoryLine key={String(pair[1])} data={pair} />;
-        })}
+    <Container>
+      <VictoryGroup tabIndex={0} color="#888888">
         {south.map(pair => {
-          return <VictoryLine key={String(pair[1])} data={pair} />;
-        })}
-        {west.map(pair => {
           return <VictoryLine key={String(pair[1])} data={pair} />;
         })}
         {east.map(pair => {
@@ -55,7 +54,7 @@ const Map = () => {
           style={{ data: { fill: ({ datum }) => datum.fill } }}
         />
       </VictoryGroup>
-    </div>
+    </Container>
   );
 };
 
