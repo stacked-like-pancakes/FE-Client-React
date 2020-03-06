@@ -1,6 +1,13 @@
 import React from 'react';
+import styled from 'styled-components';
 import { VictoryGroup, VictoryLine, VictoryScatter } from 'victory';
 import { ControllerStateContext as State } from '../../../contexts';
+
+const Container = styled.div`
+  width: 960px;
+  height: 960px;
+  margin: 0 auto;
+`;
 
 const Map = () => {
   const {
@@ -28,12 +35,7 @@ const Map = () => {
   });
 
   return (
-    <div
-      style={{
-        width: '960px',
-        height: '960px'
-      }}
-    >
+    <Container>
       <VictoryGroup tabIndex={0} color="#888888">
         {north.map(pair => {
           return <VictoryLine key={String(pair[1])} data={pair} />;
@@ -52,7 +54,7 @@ const Map = () => {
           style={{ data: { fill: ({ datum }) => datum.fill } }}
         />
       </VictoryGroup>
-    </div>
+    </Container>
   );
 };
 

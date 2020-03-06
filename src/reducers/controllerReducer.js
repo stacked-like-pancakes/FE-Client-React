@@ -31,9 +31,21 @@ export const controllerReducer = (state = controllerState, action) => {
       };
 
     case 'CHAT_INTERACTION':
+      console.log(action.payload);
+      if (
+        action.payload.input.toLowerCase() === 'move up' ||
+        action.payload.input.toLowerCase() === 'move north'
+      ) {
+        return {
+          ...state,
+          player: { ...state.player, y: state.player.y + 1 },
+          room: action.payload.data.title,
+          chat: chatFilter(state.chat, action.payload.data.description)
+        };
+      }
       return {
         ...state,
-        chat: chatFilter(state.chat, action.payload)
+        chat: chatFilter(state.chat, action.payload.input)
       };
 
     case 'PLAYER_MOVE_NORTH':

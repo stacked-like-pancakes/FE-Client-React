@@ -96,7 +96,11 @@ const Controls = () => {
   );
 
   React.useEffect(() => {
-    document.addEventListener('keyup', handleKey);
+    const controls = document.getElementById('controls');
+    if (controls) {
+      controls.addEventListener('keyup', handleKey);
+    }
+    // document.addEventListener('keyup', handleKey);
   }, [handleKey]);
 
   return (
