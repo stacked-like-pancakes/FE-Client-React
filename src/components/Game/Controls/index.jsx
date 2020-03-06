@@ -1,34 +1,46 @@
 import React from 'react';
 import { axiosWithAuth } from '../../../services/authServices';
-import { ControllerDispatchContext as Dispatch } from '../../../contexts';
+import {
+  ControllerDispatchContext as Dispatch,
+  ControllerStateContext as State
+} from '../../../contexts';
 
-const Controls = ({ chatState, setChatState }) => {
+const Controls = () => {
   const dispatch = React.useContext(Dispatch);
-
-  const handleChat = msg => {
-    return chatState.indexOf(msg) === -1
-      ? setChatState([...chatState, msg])
-      : null;
-  };
+  const state = React.useContext(State);
+  console.log(state.chat);
 
   const handlePlayer = React.useCallback(
-    (d, err) => {
-      if (!err) {
+    (d, res) => {
+      const { title, description } = res;
+      if (!res.error_msg) {
         switch (d.direction) {
           case 'n': {
-            dispatch({ type: 'PLAYER_MOVE_NORTH' });
+            dispatch({
+              type: 'PLAYER_MOVE_NORTH',
+              payload: { title, description }
+            });
             break;
           }
           case 's': {
-            dispatch({ type: 'PLAYER_MOVE_SOUTH' });
+            dispatch({
+              type: 'PLAYER_MOVE_SOUTH',
+              payload: { title, description }
+            });
             break;
           }
           case 'e': {
-            dispatch({ type: 'PLAYER_MOVE_EAST' });
+            dispatch({
+              type: 'PLAYER_MOVE_EAST',
+              payload: { title, description }
+            });
             break;
           }
           case 'w': {
-            dispatch({ type: 'PLAYER_MOVE_WEST' });
+            dispatch({
+              type: 'PLAYER_MOVE_WEST',
+              payload: { title, description }
+            });
             break;
           }
           default:
@@ -51,40 +63,29 @@ const Controls = ({ chatState, setChatState }) => {
   const handleKey = React.useCallback(
     async e => {
       switch (e.keyCode) {
-        // W to go North
         case 87: {
           const send = { direction: 'n' };
-
           const { data } = await axiosWithAuth().post('api/adv/move/', send);
-          handlePlayer(send, data.error_msg);
-          handleChat(data.description);
-          return data;
+          handlePlayer(send, data);
+          break;
         }
-        // S to go South
         case 83: {
           const send = { direction: 's' };
           const { data } = await axiosWithAuth().post('api/adv/move/', send);
-          handlePlayer(send, data.error_msg);
-          handleChat(data.description);
-          return data;
+          handlePlayer(send, data);
+          break;
         }
-        // A to go West
         case 65: {
           const send = { direction: 'w' };
           const { data } = await axiosWithAuth().post('api/adv/move/', send);
-          handlePlayer(send, data.error_msg);
-          handleChat(data.description);
-
-          return data;
+          handlePlayer(send, data);
+          break;
         }
-        // D to go East
         case 68: {
           const send = { direction: 'e' };
           const { data } = await axiosWithAuth().post('api/adv/move/', send);
-          handlePlayer(send, data.error_msg);
-          handleChat(data.description);
-
-          return data;
+          handlePlayer(send, data);
+          break;
         }
         default:
           break;
