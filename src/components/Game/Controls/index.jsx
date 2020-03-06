@@ -8,7 +8,6 @@ import {
 const Controls = () => {
   const dispatch = React.useContext(Dispatch);
   const state = React.useContext(State);
-  console.log(state.chat);
 
   const handlePlayer = React.useCallback(
     (d, res) => {
@@ -55,7 +54,7 @@ const Controls = () => {
     e.preventDefault();
     const send = { direction: body };
     const { data } = await axiosWithAuth().post('api/adv/move/', send);
-    handlePlayer(send, data.err_msg);
+    handlePlayer(send, data);
 
     return data;
   };
@@ -100,7 +99,6 @@ const Controls = () => {
     if (controls) {
       controls.addEventListener('keyup', handleKey);
     }
-    // document.addEventListener('keyup', handleKey);
   }, [handleKey]);
 
   return (

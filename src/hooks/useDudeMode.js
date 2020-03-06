@@ -22,9 +22,9 @@ export const useDudeMode = () => {
   const [dudeMode, setDudeMode] = useLocalStorage('dude');
   useEffect(() => {
     if (dudeMode) {
-      document.querySelector('body').classList.add('dude-mode');
+      document.querySelector('.wrapper').classList.add('dude-mode');
     } else {
-      document.querySelector('body').classList.remove('dude-mode');
+      document.querySelector('.wrapper').classList.remove('dude-mode');
     }
   }, [dudeMode]);
 

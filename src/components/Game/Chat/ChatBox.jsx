@@ -29,29 +29,78 @@ const ChatBox = () => {
   const dispatch = React.useContext(Dispatch);
   const [inputState, setInputState] = React.useState('');
 
-  const sendPlayerChat = async dir => {
-    const send = { direction: dir };
-    const { data } = await axiosWithAuth().post('api/adv/move/', send);
-
-    return data;
-  };
-
   const handleChange = e => {
     setInputState(e.target.value);
   };
 
-  const handleSubmit = async e => {
-    e.preventDefault();
-    const payload = {
-      input: inputState,
-      data: await sendPlayerChat('n')
-    };
-    dispatch({ type: 'CHAT_INTERACTION', payload });
-    setInputState('');
-  };
+  const handleSubmit = React.useCallback(
+    async (e, dir) => {
+      e.preventDefault();
+      switch (dir.toLowerCase()) {
+        case 'move north': {
+          const send = { direction: 'n' };
+          const { data } = await axiosWithAuth().post('api/adv/move/', send);
+          if (!data.error_msg) {
+            dispatch({ type: 'CHAT_MOVE_NORTH', payload: data });
+            setInputState('');
+          } else {
+            dispatch({ type: 'CHAT_HANDLE_ERROR', payload: data.error_msg });
+            setInputState('');
+          }
+          break;
+        }
+        case 'move south': {
+          const send = { direction: 's' };
+          const { data } = await axiosWithAuth().post('api/adv/move/', send);
+          if (!data.error_msg) {
+            dispatch({ type: 'CHAT_MOVE_SOUTH', payload: data });
+            setInputState('');
+          } else {
+            dispatch({ type: 'CHAT_HANDLE_ERROR', payload: data.error_msg });
+            setInputState('');
+          }
+          break;
+        }
+        case 'move east': {
+          const send = { direction: 'e' };
+          const { data } = await axiosWithAuth().post('api/adv/move/', send);
+          if (!data.error_msg) {
+            dispatch({ type: 'CHAT_MOVE_EAST', payload: data });
+            setInputState('');
+          } else {
+            dispatch({ type: 'CHAT_HANDLE_ERROR', payload: data.error_msg });
+            setInputState('');
+          }
+          break;
+        }
+
+        case 'move west': {
+          const send = { direction: 'w' };
+          const { data } = await axiosWithAuth().post('api/adv/move/', send);
+          if (!data.error_msg) {
+            dispatch({ type: 'CHAT_MOVE_WEST', payload: data });
+            setInputState('');
+          } else {
+            dispatch({ type: 'CHAT_HANDLE_ERROR', payload: data.error_msg });
+            setInputState('');
+          }
+          break;
+        }
+
+        default:
+          dispatch({ type: 'CHAT_INTERACTION', payload: inputState });
+          setInputState('');
+      }
+      return null;
+    },
+    [dispatch, inputState]
+  );
 
   return (
-    <form stlye={{ display: 'flex' }} onSubmit={handleSubmit}>
+    <form
+      stlye={{ display: 'flex' }}
+      onSubmit={e => handleSubmit(e, inputState)}
+    >
       <Row type="text" onChange={handleChange} value={inputState} />
       <Button type="submit">Enter</Button>
     </form>

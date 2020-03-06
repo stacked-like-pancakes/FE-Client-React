@@ -1,8 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import { useDudeMode } from '../../hooks/useDudeMode';
 
 import Navigation from '../Navigation';
+import './landing.css';
 
 const Wrapper = styled.div`
   background-image: url('https://wallpaperplay.com/walls/full/8/b/9/113793.jpg');
@@ -16,11 +18,6 @@ const Heading = styled.h1`
   font-size: 5rem;
   text-shadow: 2px 10px black;
 `;
-
-// DUDE MODE
-// background-image: url('https://media.discordapp.net/attachments/683074990723170307/684874223604465674/unknown.png?width=378&height=506');
-// background-size: cover;
-// background-repeat: no-repeat;
 
 const Container = styled.div`
   height: 100vh;
@@ -87,10 +84,13 @@ const Button = styled.button`
 `;
 
 const LandingPage = () => {
+  const [dude, setDude] = useDudeMode(false);
+
   return (
-    <Wrapper>
-      <Container className="container">
-        <Navigation />
+    <div className="wrapper">
+      <Container>
+        <button onClick={e => setDude(e)}>dude</button>
+        <Navigation dude={dude} setDude={setDude} />
         <Section id="main">
           <Heading>DUDESCAPE.</Heading>
           <Link to="/auth">
@@ -100,7 +100,7 @@ const LandingPage = () => {
           </Link>
         </Section>
       </Container>
-    </Wrapper>
+    </div>
   );
 };
 

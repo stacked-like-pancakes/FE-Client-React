@@ -31,22 +31,49 @@ export const controllerReducer = (state = controllerState, action) => {
       };
 
     case 'CHAT_INTERACTION':
-      console.log(action.payload);
-      if (
-        action.payload.input.toLowerCase() === 'move up' ||
-        action.payload.input.toLowerCase() === 'move north'
-      ) {
-        return {
-          ...state,
-          player: { ...state.player, y: state.player.y + 1 },
-          room: action.payload.data.title,
-          chat: chatFilter(state.chat, action.payload.data.description)
-        };
-      }
       return {
         ...state,
-        chat: chatFilter(state.chat, action.payload.input)
+        chat: chatFilter(state.chat, action.payload)
       };
+
+    case 'CHAT_MOVE_NORTH':
+      return {
+        ...state,
+        player: { ...state.player, y: state.player.y + 1 },
+        room: action.payload.title,
+        chat: chatFilter(state.chat, action.payload.description)
+      };
+
+    case 'CHAT_MOVE_SOUTH':
+      return {
+        ...state,
+        player: { ...state.player, y: state.player.y - 1 },
+        room: action.payload.title,
+        chat: chatFilter(state.chat, action.payload.description)
+      };
+
+    case 'CHAT_MOVE_EAST':
+      return {
+        ...state,
+        player: { ...state.player, x: state.player.x + 1 },
+        room: action.payload.title,
+        chat: chatFilter(state.chat, action.payload.description)
+      };
+
+    case 'CHAT_MOVE_WEST':
+      return {
+        ...state,
+        player: { ...state.player, x: state.player.x - 1 },
+        room: action.payload.title,
+        chat: chatFilter(state.chat, action.payload.description)
+      };
+
+    case 'CHAT_HANDLE_ERROR': {
+      return {
+        ...state,
+        chat: chatFilter(state.chat, action.payload)
+      };
+    }
 
     case 'PLAYER_MOVE_NORTH':
       return {

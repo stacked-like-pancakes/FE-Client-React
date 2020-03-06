@@ -38,10 +38,10 @@ const Game = () => {
   return (
     <Container>
       <Chat />
+      <Controls />
       <div id="controls" tabIndex={0} style={{ outline: 'none' }}>
         <Map />
       </div>
-      <Controls />
     </Container>
   );
 };
