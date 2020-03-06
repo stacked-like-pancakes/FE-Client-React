@@ -1,13 +1,24 @@
 import React from 'react';
+import styled from 'styled-components';
 import { axiosWithAuth } from '../../../services/authServices';
-import {
-  ControllerDispatchContext as Dispatch,
-  ControllerStateContext as State
-} from '../../../contexts';
+import { ControllerDispatchContext as Dispatch } from '../../../contexts';
+
+const Button = styled.button`
+  color: #333;
+  background: white;
+  border: 1px solid #333;
+  width: 25%;
+  margin-top: 5px;
+  padding: 5px;
+
+  &:hover {
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+`;
 
 const Controls = () => {
   const dispatch = React.useContext(Dispatch);
-  const state = React.useContext(State);
 
   const handlePlayer = React.useCallback(
     (d, res) => {
@@ -103,18 +114,18 @@ const Controls = () => {
 
   return (
     <>
-      <button onClick={e => handleClick(e, 'n')} type="button">
+      <Button onClick={e => handleClick(e, 'n')} type="Button">
         North
-      </button>
-      <button onClick={e => handleClick(e, 's')} type="button">
+      </Button>
+      <Button onClick={e => handleClick(e, 's')} type="Button">
         South
-      </button>
-      <button onClick={e => handleClick(e, 'e')} type="button">
+      </Button>
+      <Button onClick={e => handleClick(e, 'e')} type="Button">
         East
-      </button>
-      <button onClick={e => handleClick(e, 'w')} type="button">
+      </Button>
+      <Button onClick={e => handleClick(e, 'w')} type="Button">
         West
-      </button>
+      </Button>
     </>
   );
 };

@@ -39,7 +39,16 @@ const Game = () => {
     <Container>
       <Chat />
       <Controls />
-      <div id="controls" tabIndex={0} style={{ outline: 'none' }}>
+      <div
+        id="controls"
+        tabIndex={0}
+        style={{
+          outline: 'none',
+          backgroundSize: 'contain',
+          backgroundImage: `url('https://www.runescape.com/img/rsp777/bg2.jpg')`,
+          backgroundRepeat: 'y-repeat'
+        }}
+      >
         <Map />
       </div>
     </Container>

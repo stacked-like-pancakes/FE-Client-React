@@ -31,19 +31,19 @@ const Map = () => {
         ...playerConfig
       };
     }
-    return { x, y, symbol: 'circle' };
+    return { x, y, symbol: 'circle', fill: 'white' };
   });
 
+  // {north.map(pair => {
+  // 	return <VictoryLine key={String(pair[1])} data={pair} />;
+  // })}
+  // {west.map(pair => {
+  // 	return <VictoryLine key={String(pair[1])} data={pair} />;
+  // })}
   return (
     <Container>
       <VictoryGroup tabIndex={0} color="#888888">
-        {north.map(pair => {
-          return <VictoryLine key={String(pair[1])} data={pair} />;
-        })}
         {south.map(pair => {
-          return <VictoryLine key={String(pair[1])} data={pair} />;
-        })}
-        {west.map(pair => {
           return <VictoryLine key={String(pair[1])} data={pair} />;
         })}
         {east.map(pair => {
